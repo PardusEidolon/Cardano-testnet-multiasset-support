@@ -216,3 +216,153 @@ cardano-cli query utxo \
 5dcd455c11659e8e584d2f3dbb3c93a0a299434b1c3d61a27361b1a4.carrot
 
 Carrots are great for the eyesight.
+
+---
+
+## Building a transaction with meta-data
+
+1. Setting up enviroment varibles
+
+```
+export TXNID1=6e8460c6662d0d664e008dd3bbe2d2fe4f83464c0a0138f3560ee3c4f4b0ef0d
+export LOVELACE1=50000000
+
+export ASSET1="10 b3d489451787b35e0c882bdefc4236cb66c3334c3b315f4365917579.metaCoin"
+export METADATA_FILE=./metadata.json
+
+export OUTADDR=addr_test1qqykkqr28fvylu3el7zht6vx6ynt9d3dw5u5l2yfk8lv60l3zg5yyt7lc4wuekkks0pefg468s8nhy2e4srz7lu2dssqt0hta6
+
+export OUT_FILE=matx.raw
+export SIGNED_FILE=matx.signed
+
+export FEE=0
+export MINLOVELACE=1444443
+```
+
+1. Build the transaction
+
+```
+cardano-cli transaction build-raw \
+  --mary-era \
+  --fee $FEE \
+  --tx-in "$TXNID1"#0 \
+  --tx-out=$OUTADDR+$(expr $LOVELACE1 - $FEE)+"$ASSET1" \
+  --mint="$ASSET1" \
+  --json-metadata-no-schema \
+  --metadata-json-file $METADATA_FILE \
+  --out-file $OUT_FILE
+```
+
+2. Calculate min fee
+
+```
+cardano-cli transaction calculate-min-fee \
+--tx-body-file $OUT_FILE \
+--tx-in-count 1 \
+--tx-out-count 1 \
+--witness-count 1 \
+--testnet-magic $MAGICID \
+--protocol-params-file protocol.json
+```
+
+3. build the transaction again with the new fee
+
+```
+export FEE=185653
+``` 
+
+4. Sign the transaction
+
+```
+cardano-cli transaction sign \
+	     --signing-key-file payment.skey \
+	     --signing-key-file policy/policy.skey \
+	     --script-file policy/policy.script \
+	     --testnet-magic $MAGICID \
+	     --tx-body-file $OUT_FILE \
+         --out-file $SIGNED_FILE
+
+```
+
+5. Submit the transaction
+
+```
+cardano-cli transaction submit --tx-file  $SIGNED_FILE --testnet-magic $MAGICID
+```
+
+6. check out the transaction :D
+```
+cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
+```
+---
+## Burning Tokens
+
+In order to burn tokens you have to make sure you have the same policyid, skey and vkey from which the minted tokens came from otherwise you will not be able to complete this proccess.
+
+1. lets not forget to set up out enviroment varibles
+
+```
+export TXNID1=949fc1fa316e888ff3469e15463e08db63221b382b02c9b4f7041557f7edef43
+export LOVELACE1=1444443
+
+export ASSET1="-10 b3d489451787b35e0c882bdefc4236cb66c3334c3b315f4365917579.metaCoin"
+
+export ADDR=addr_test1vzp8fywldcewta76h5lz0g85c8de9djqgn0pa5m8z2tvjhq4d6ezc
+export OUT_ADDR=addr_test1qqykkqr28fvylu3el7zht6vx6ynt9d3dw5u5l2yfk8lv60l3zg5yyt7lc4wuekkks0pefg468s8nhy2e4srz7lu2dssqt0hta6
+
+export OUT_FILE=matx.raw
+export SIGNED_FILE=matx.signed
+
+export FEE=0
+export MINLOVELACE=1444443
+```
+
+2. first we build our transaction
+
+```
+cardano-cli transaction build-raw \
+        	--mary-era \
+        	--fee $FEE \
+        	--tx-in "$TXNID1"#0 \
+            --tx-out=$OUT_ADDR+$(expr $LOVELACE1 - $FEE) \
+         	--mint="$ASSET1" \
+       	    --out-file $OUT_FILE
+```
+
+3. Generate a fee then build the transaction again after exporting the new fee varible
+
+```
+cardano-cli transaction calculate-min-fee \
+--tx-body-file $OUT_FILE \
+--tx-in-count 1 \
+--tx-out-count 1 \
+--witness-count 1 \
+--testnet-magic $MAGICID \
+--protocol-params-file protocol.json
+```
+
+export FEE=173157
+
+4. Sign Transaction
+
+```
+cardano-cli transaction sign \
+	     --signing-key-file payment.skey \
+	     --signing-key-file policy/policy.skey \
+	     --script-file policy/policy.script \
+	     --testnet-magic $MAGICID \
+	     --tx-body-file $OUT_FILE \
+         --out-file $SIGNED_FILE
+
+```
+
+5. Submit the transaction
+
+```
+cardano-cli transaction submit --tx-file  $SIGNED_FILE --testnet-magic $MAGICID
+```
+
+6. check out the transaction :D
+```
+cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
+```

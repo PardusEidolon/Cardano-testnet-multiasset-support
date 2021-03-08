@@ -2,27 +2,18 @@
 
 *Just experimenting with enviroment variables*
 
+**Looking into the addresss just pinning it here**
+```
 cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
+```
 
-export TXNID1=0661bb4bf90b25388c6647ac46289e41bae40b8ea19d2044c742e715e4002c9b
-export LOVELACE1=1481488
-
-export TXNID2=28fdb70edc9817baadef5e0ace47bebf5c07a1082d1da733e8658f789b7b5dcc
-export LOVELACE2=1444443
-
-export TXNID3=8794b5f38416ed30c2b29e7aee0e80ccd95d6df45035e544313705724185416c
-export LOVELACE3=1629628
-
-export TXNID4=e7e08dd07e9ceebe0e99e065745a90f86931731100c9e976363e0379489924a5
-export LOVELACE4=1444443
+export TXNID1=6e8460c6662d0d664e008dd3bbe2d2fe4f83464c0a0138f3560ee3c4f4b0ef0d
+export LOVELACE1=50000000
 
 export ASSET1="500000 73ca2dcefe5652d52dc111cfa16c84b08d9222cbcc6290944da548f3.fruitcoin"
-export ASSET2="10 5dcd455c11659e8e584d2f3dbb3c93a0a299434b1c3d61a27361b1a4.carrot"
-export ASSET3="2 6b8d07d69639e9413dd637a1a815a7323c69c86abbafb66dbfdb1aa7"
-export ASSET4="100 5dcd455c11659e8e584d2f3dbb3c93a0a299434b1c3d61a27361b1a4.eggplant"
 
 export FEE=0
-export MINLOVELACE=2000000
+export MINLOVELACE=1444443
 
 
 *This is just me copying and pasting code and changing it up a bit.*
@@ -102,3 +93,5 @@ cardano-cli transaction sign \
 cardano-cli transaction submit --tx-file matx.signed --testnet-magic $MAGICID
 
 cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
+
+---
