@@ -95,3 +95,31 @@ cardano-cli transaction submit --tx-file matx.signed --testnet-magic $MAGICID
 cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
 
 ---
+## More side notes
+
+```
+cardano-cli transaction build-raw \
+  --mary-era \
+  --fee $FEE \
+  --tx-in "$TXNID1"#0 \
+  --tx-out=$OUTADDR+$(expr $LOVELACE1 - $FEE)+"$ASSET1" \
+  --mint="$ASSET1" \
+  --out-file $OUT_FILE
+```
+
+---
+## Meta-data templates
+
+```
+make sure to keep the quotation marks when your changing the parameters
+
+{
+    "any number here":{
+       "ticker": "any four letters that abrieveiate your token name",
+       "name": "can be anything, make sure it matches you token name otherwise it will be confussing",
+       "description": "describe your token here",
+       "homepage": "can be anything here",
+       "address": "Anyadress you may want to put here"
+    }
+  }
+```

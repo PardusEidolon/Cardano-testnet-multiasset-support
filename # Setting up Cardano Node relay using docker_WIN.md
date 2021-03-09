@@ -13,8 +13,7 @@
 docker run --detach --name=relay1 -v C:\docker\cardano-node\mary-ipc:/ipc -v C:\docker\cardano-node\mary-config:/config -e NETWORK=testnet inputoutput/cardano-node run
 ```
 
-
-   a. To run a shell in VS Code, setting the needed environment varibles this is optional you can just do this in the docker CLI.
+a. To run a shell in VS Code, setting the needed environment varibles this is optional you can just do this in the docker CLI.
 
 ```
 docker exec -it -e CARDANO_NODE_SOCKET_PATH=/ipc/node.socket -e MAGICID=1097911063 relay1 sh
@@ -34,7 +33,7 @@ cardano-cli query tip --testnet-magic $MAGICID
 
 Just checking the current slot ^
 
-6. generate your key pairs
+6. Cd into the config folder and generate your key pairs
 
 ```
 cardano-cli address key-gen --verification-key-file payment.vkey --signing-key-file payment.skey
@@ -53,7 +52,7 @@ cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --
 8. Export the porotocol parameters
 
 ```
-cardano-cli  query protocol-parameters --testnet-magic $MAGICID --out-file protocol.json
+cardano-cli  query protocol-parameters --testnet-magic $MAGICID --out-file protocol.json --mary-era
 ```
 
 9. Start the minting process
@@ -80,7 +79,7 @@ cat policy/policy.script
 ```
 cardano-cli transaction policyid --script-file ./policy/policy.script 
 ```
-policy script output: b3d489451787b35e0c882bdefc4236cb66c3334c3b315f4365917579
+policy script output: ca9d41124ec5508fb382996d480781c80f6f24cf0a9e2ca97630af69
 
 ## Build the transaction
 
@@ -224,10 +223,10 @@ Carrots are great for the eyesight.
 1. Setting up enviroment varibles
 
 ```
-export TXNID1=6e8460c6662d0d664e008dd3bbe2d2fe4f83464c0a0138f3560ee3c4f4b0ef0d
-export LOVELACE1=50000000
+export TXNID1=eebd0033bcd1cb35dee40441a82bb71709c76e47ae3d2fe98f9c94e13d2086f5
+export LOVELACE1=20000000
 
-export ASSET1="10 b3d489451787b35e0c882bdefc4236cb66c3334c3b315f4365917579.metaCoin"
+export ASSET1="10 ca9d41124ec5508fb382996d480781c80f6f24cf0a9e2ca97630af69.alphaCoin"
 export METADATA_FILE=./metadata.json
 
 export OUTADDR=addr_test1qqykkqr28fvylu3el7zht6vx6ynt9d3dw5u5l2yfk8lv60l3zg5yyt7lc4wuekkks0pefg468s8nhy2e4srz7lu2dssqt0hta6
@@ -236,7 +235,7 @@ export OUT_FILE=matx.raw
 export SIGNED_FILE=matx.signed
 
 export FEE=0
-export MINLOVELACE=1444443
+export MINLOVELACE=0
 ```
 
 1. Build the transaction
@@ -268,10 +267,10 @@ cardano-cli transaction calculate-min-fee \
 3. build the transaction again with the new fee
 
 ```
-export FEE=185653
+export FEE=183849
 ``` 
 
-4. Sign the transaction
+4. Sign the transaction then rebuild the transaction again
 
 ```
 cardano-cli transaction sign \
@@ -302,10 +301,10 @@ In order to burn tokens you have to make sure you have the same policyid, skey a
 1. lets not forget to set up out enviroment varibles
 
 ```
-export TXNID1=949fc1fa316e888ff3469e15463e08db63221b382b02c9b4f7041557f7edef43
-export LOVELACE1=1444443
+export TXNID1=73df5eaa541e9a3dac8e4f2e92f917f666732db68add15ca9d6ec81746236f65
+export LOVELACE1=2000000
 
-export ASSET1="-10 b3d489451787b35e0c882bdefc4236cb66c3334c3b315f4365917579.metaCoin"
+export ASSET1="-10 ca9d41124ec5508fb382996d480781c80f6f24cf0a9e2ca97630af69.alphaCoin"
 
 export ADDR=addr_test1vzp8fywldcewta76h5lz0g85c8de9djqgn0pa5m8z2tvjhq4d6ezc
 export OUT_ADDR=addr_test1qqykkqr28fvylu3el7zht6vx6ynt9d3dw5u5l2yfk8lv60l3zg5yyt7lc4wuekkks0pefg468s8nhy2e4srz7lu2dssqt0hta6
@@ -314,7 +313,7 @@ export OUT_FILE=matx.raw
 export SIGNED_FILE=matx.signed
 
 export FEE=0
-export MINLOVELACE=1444443
+export MINLOVELACE=0
 ```
 
 2. first we build our transaction
@@ -341,7 +340,7 @@ cardano-cli transaction calculate-min-fee \
 --protocol-params-file protocol.json
 ```
 
-export FEE=173157
+export FEE=173377
 
 4. Sign Transaction
 
