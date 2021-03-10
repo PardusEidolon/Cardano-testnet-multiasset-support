@@ -1,19 +1,20 @@
 ## Side notes
 
-*Just experimenting with enviroment variables*
+*Just experimenting with enviroment variables this is just a dumping playground*
 
 **Looking into the addresss just pinning it here**
 ```
 cardano-cli query utxo --address $(cat payment.addr) --testnet-magic $MAGICID --mary-era
 ```
 
-export TXNID1=6e8460c6662d0d664e008dd3bbe2d2fe4f83464c0a0138f3560ee3c4f4b0ef0d
-export LOVELACE1=50000000
+export TXNID1=2ff2c2a5321502749ae1bc5133158872ac5e2f9b4a527fcef7801cab7a082878
+export LOVELACE1=20000000
 
-export ASSET1="500000 73ca2dcefe5652d52dc111cfa16c84b08d9222cbcc6290944da548f3.fruitcoin"
+export OUTADDR=addr_test1qqykkqr28fvylu3el7zht6vx6ynt9d3dw5u5l2yfk8lv60l3zg5yyt7lc4wuekkks0pefg468s8nhy2e4srz7lu2dssqt0hta6
 
 export FEE=0
-export MINLOVELACE=1444443
+export MINLOVELACE=5000000
+export OUTFILE=matx.raw
 
 
 *This is just me copying and pasting code and changing it up a bit.*
@@ -22,22 +23,19 @@ cardano-cli transaction build-raw \
     --mary-era \
     --fee $FEE \
     --tx-in $TXNID1#0 \
-    --tx-in $TXNID2#0 \
-    --tx-in $TXNID3#0 \
-    --tx-in $TXNID4#0 \
-    --tx-out $(cat payment.addr)+$(expr $LOVELACE1 + $LOVELACE2 + $LOVELACE3 + $LOVELACE4 - $MINLOVELACE - $FEE) \
-    --tx-out $(cat payment.addr)+$MINLOVELACE+"$ASSET1"+"$ASSET2"+"$ASSET3"+"$ASSET4" \
+    --tx-out $OUTADDR+$MINLOVELACE \
+    --tx-out $(cat payment.addr)+$(expr $LOVELACE1 - $MINLOVELACE - $FEE) \
     --out-file matx.raw
 
 cardano-cli transaction calculate-min-fee \
 --tx-body-file matx.raw \
---tx-in-count 4 \
---tx-out-count 2 \
+--tx-in-count 1 \
+--tx-out-count 1 \
 --witness-count 1 \
 --testnet-magic $MAGICID \
 --protocol-params-file protocol.json
 
-export FEE=190317
+export FEE=172893
 
 cardano-cli transaction sign \
   --signing-key-file payment.skey \
